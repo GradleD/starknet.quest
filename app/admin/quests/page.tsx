@@ -74,14 +74,27 @@ export default function Page() {
   );
   // Function to delete a quest
   const deleteQuest = useCallback(async (questId: string) => {
+    if (!questId || typeof questId !== 'string') {
+   showNotification("Invalid quest ID", "error");
+   return;
+ }
+  if (!window.confirm('Are you sure you want to delete this quest? This action cannot be undone.')) {
+   return;
+ }
+
+ setLoading(true);
     try {
-      await AdminService.deleteQuest(questId); // Call to the service that deletes the quest
+     const response = await AdminService.deleteQuest(questId);
+   if (!response.success) {
+      throw new Error('Failed to delete quest');
+   }
       setQuests((prevQuests) => prevQuests.filter((quest) => quest.id !== questId)); // Remove the quest from the state
       showNotification("Quest deleted successfully", "success");
     } catch (error) {
       showNotification("Error deleting quest", "error");
       console.error("Error deleting quest", error);
-    }
+    }finally {
+    setLoading(false);
   }, [showNotification]);
   
  return (
@@ -175,20 +188,12 @@ export default function Page() {
                   {quests?.map((quest) => {
                     if (quest.disabled) {
                       return (
-                        <div key={quest.id} className="quest-item">
-                          <Quest
-                            title={quest.title_card}
-                            onClick={() =>
-                              router.push(`/admin/quests/dashboard/${quest.id}`)
-                            }
-                            imgSrc={quest.img_card}
-                            reward={quest.disabled ? "Disabled" : "Active"}
-                            id={quest.id}
-                          />
-                          <Button onClick={() => deleteQuest(quest.id)}>
-                            <p>Delete Quest</p>
-                          </Button>
-                        </div>
+                        <QuestItem
+                          key={quest.id}
+                          quest={quest}
+                          onDelete={deleteQuest}
+                          onNavigate={(id) => router.push(`/admin/quests/dashboard/${id}`)}
+/>
                       );
                     }
                   })}
