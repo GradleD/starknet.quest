@@ -72,8 +72,19 @@ export default function Page() {
     },
     []
   );
-
-  return (
+  // Function to delete a quest
+  const deleteQuest = useCallback(async (questId: string) => {
+    try {
+      await AdminService.deleteQuest(questId); // Call to the service that deletes the quest
+      setQuests((prevQuests) => prevQuests.filter((quest) => quest.id !== questId)); // Remove the quest from the state
+      showNotification("Quest deleted successfully", "success");
+    } catch (error) {
+      showNotification("Error deleting quest", "error");
+      console.error("Error deleting quest", error);
+    }
+  }, [showNotification]);
+  
+ return (
     <div className="flex flex-col w-full pt-28 g-8">
       <div className={styles.backButton}>
         <BackButton onClick={() => router.back()} />
@@ -102,7 +113,7 @@ export default function Page() {
                   className="pb-4"
                   value={tabIndex}
                   onChange={handleChangeTab}
-                  aria-label="quests and collectons tabs"
+                  aria-label="quests and collections tabs"
                   indicatorColor="secondary"
                 >
                   <Tab
@@ -140,16 +151,20 @@ export default function Page() {
                   {quests?.map((quest) => {
                     if (!quest.disabled) {
                       return (
-                        <Quest
-                          key={quest.id}
-                          title={quest.title_card}
-                          onClick={() =>
-                            router.push(`/admin/quests/dashboard/${quest.id}`)
-                          }
-                          imgSrc={quest.img_card}
-                          reward={quest.disabled ? "Disabled" : "Active"}
-                          id={quest.id}
-                        />
+                        <div key={quest.id} className="quest-item">
+                          <Quest
+                            title={quest.title_card}
+                            onClick={() =>
+                              router.push(`/admin/quests/dashboard/${quest.id}`)
+                            }
+                            imgSrc={quest.img_card}
+                            reward={quest.disabled ? "Disabled" : "Active"}
+                            id={quest.id}
+                          />
+                          <Button onClick={() => deleteQuest(quest.id)}>
+                            <p>Delete Quest</p>
+                          </Button>
+                        </div>
                       );
                     }
                   })}
@@ -160,16 +175,20 @@ export default function Page() {
                   {quests?.map((quest) => {
                     if (quest.disabled) {
                       return (
-                        <Quest
-                          key={quest.id}
-                          title={quest.title_card}
-                          onClick={() =>
-                            router.push(`/admin/quests/dashboard/${quest.id}`)
-                          }
-                          imgSrc={quest.img_card}
-                          reward={quest.disabled ? "Disabled" : "Active"}
-                          id={quest.id}
-                        />
+                        <div key={quest.id} className="quest-item">
+                          <Quest
+                            title={quest.title_card}
+                            onClick={() =>
+                              router.push(`/admin/quests/dashboard/${quest.id}`)
+                            }
+                            imgSrc={quest.img_card}
+                            reward={quest.disabled ? "Disabled" : "Active"}
+                            id={quest.id}
+                          />
+                          <Button onClick={() => deleteQuest(quest.id)}>
+                            <p>Delete Quest</p>
+                          </Button>
+                        </div>
                       );
                     }
                   })}
