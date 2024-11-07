@@ -10,6 +10,7 @@ interface LoadingWrapperProps {
   children: React.ReactNode;
   width?: string | number;
   height?: string | number;
+  skeletonTextWidth?: string | number;
 }
 
 const Loading: React.FC<LoadingWrapperProps> = ({
@@ -18,6 +19,7 @@ const Loading: React.FC<LoadingWrapperProps> = ({
   children,
   width = "100%",
   height = 100,
+  skeletonTextWidth = 80,
 }) => {
   if (!isLoading) return <>{children}</>;
   switch (loadingType) {
@@ -29,6 +31,7 @@ const Loading: React.FC<LoadingWrapperProps> = ({
             variant="rectangular"
             width="100%"
             height="100%"
+            aria-busy="true"
           />
           <div style={{
             position: 'absolute',
@@ -38,15 +41,15 @@ const Loading: React.FC<LoadingWrapperProps> = ({
             display: 'flex',
             alignItems: 'center'
           }}>
-            <Lock sx={{ marginRight: 1 }} /> {/* Privacy Icon */}
-            <Skeleton variant="text" width={80} />
+              <Lock sx={{ marginRight: 1 }} aria-hidden="true" /> {/* Privacy Icon */}
+              <Skeleton variant="text" width={skeletonTextWidth} />
           </div>
         </div>
       );
     case "spinner":
       return (
         <div className="flex justify-center items-center w-full h-[350px]">
-          <CircularProgress />
+          <CircularProgress aria-busy="true"/>
         </div>
       );
     default:
