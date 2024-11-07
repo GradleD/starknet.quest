@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo, useState } from "react";
+import React, { FunctionComponent, useMemo, useState, useEffect } from "react";
 import { TEXT_TYPE } from "@constants/typography";
 import Typography from "@components/UI/typography/typography";
 import { Doughnut } from "react-chartjs-2";
@@ -10,6 +10,8 @@ import cursor from '../../public/icons/cursor.png';
 import cursorPointer from '../../public/icons/pointer-cursor.png';
 import ClaimModal from "../discover/claimModal";
 import SuccessModal from "../discover/successModal";
+import Loading from "@components/skeletons/loading";
+
 Chart.register(ArcElement, DoughnutController, Tooltip);
 
 type PortfolioSummaryProps = {
@@ -42,7 +44,16 @@ const ChartEntry: FunctionComponent<ChartItem> = ({
 };
 
 const PortfolioSummary: FunctionComponent<PortfolioSummaryProps> = ({ title, data, totalBalance, isProtocol, minSlicePercentage = 0.05 }) => {
-
+const [loading, setLoading] = useState(true); // Add loading state
+  // Simulate data fetching
+  useEffect(() => {
+    const fetchData = async () => {
+      // Simulate an API call
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate delay
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
   const normalizeMinValue = (data: ChartItem[]) => {
     return data.map(entry => 
       Number(entry.itemValue) < totalBalance * minSlicePercentage ? 
@@ -85,7 +96,10 @@ const PortfolioSummary: FunctionComponent<PortfolioSummaryProps> = ({ title, dat
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   
-  return data.length > 0 ? (
+  return (  
+    <Loading isLoading={loading} loadingType="skeleton" width="100%" height={300}>
+
+      {data.length > 0 ? (
     <div className={styles.dashboard_portfolio_summary}>
       <div className="flex flex-col md:flex-row w-full justify-between items-center mb-4">
         <div className="mb-4 md:mb-1">
@@ -135,7 +149,9 @@ const PortfolioSummary: FunctionComponent<PortfolioSummaryProps> = ({ title, dat
         </div>
       </div>
     </div>
-  ) : null;
+  ) : null}
+    </Loading>
+          );
 }
 
 export default PortfolioSummary;
