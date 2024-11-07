@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo, useState } from "react";
+import React, { FunctionComponent, useMemo, useState, useEffect } from "react";
 import { TEXT_TYPE } from "@constants/typography";
 import Typography from "@components/UI/typography/typography";
 import { Doughnut } from "react-chartjs-2";
@@ -11,6 +11,7 @@ import cursorPointer from '../../public/icons/pointer-cursor.png';
 import ClaimModal from "../discover/claimModal";
 import SuccessModal from "../discover/successModal";
 Chart.register(ArcElement, DoughnutController, Tooltip);
+import Loading from "@components/skeletons/loading";
 
 type PortfolioSummaryProps = {
   title: string,
@@ -43,11 +44,21 @@ const ChartEntry: FunctionComponent<ChartItem> = ({
 
 const PortfolioSummary: FunctionComponent<PortfolioSummaryProps> = ({ title, data, totalBalance, isProtocol, minSlicePercentage = 0.05 }) => {
 
+  const [loading, setLoading] = useState(true); // Add loading state
+  // Simulate data fetching
+  useEffect(() => {
+    const fetchData = async () => {
+      // Simulate an API call
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate delay
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
   const normalizeMinValue = (data: ChartItem[]) => {
-    return data.map(entry => 
-      Number(entry.itemValue) < totalBalance * minSlicePercentage ? 
-      (totalBalance * minSlicePercentage).toFixed(2) : 
-      entry.itemValue
+    return data.map(entry =>
+      Number(entry.itemValue) < totalBalance * minSlicePercentage ?
+        (totalBalance * minSlicePercentage).toFixed(2) :
+        entry.itemValue
     );
   }
 
@@ -84,58 +95,63 @@ const PortfolioSummary: FunctionComponent<PortfolioSummaryProps> = ({ title, dat
 
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  
-  return data.length > 0 ? (
-    <div className={styles.dashboard_portfolio_summary}>
-      <div className="flex flex-col md:flex-row w-full justify-between items-center mb-4">
-        <div className="mb-4 md:mb-1">
-          <Typography type={TEXT_TYPE.BUTTON_LARGE} style={{ textAlign: "left", width: "fit-content"}}>{title}</Typography>
+
+  return (
+    <Loading isLoading={loading} loadingType="skeleton" width="100%" height={300}>
+
+      {data.length > 0 ? (
+        <div className={styles.dashboard_portfolio_summary}>
+          <div className="flex flex-col md:flex-row w-full justify-between items-center mb-4">
+            <div className="mb-4 md:mb-1">
+              <Typography type={TEXT_TYPE.BUTTON_LARGE} style={{ textAlign: "left", width: "fit-content" }}>{title}</Typography>
+            </div>
+            {isProtocol && (
+              <button
+                onClick={() => setShowClaimModal(true)}
+                className="flex items-center justify-evenly gap-1.5 lg:gap-4 bg-white rounded-xl modified-cursor-pointer h-min px-6 py-2 mb-4 md:mb-0"
+              >
+                <CDNImg width={20} src={starknetIcon.src} loading="lazy" />
+                <Typography type={TEXT_TYPE.BUTTON_SMALL} color="background" style={{ lineHeight: "1rem" }}>
+                  Claim your reward
+                </Typography>
+              </button>
+            )}
+            <ClaimModal
+              open={showClaimModal}
+              closeModal={() => setShowClaimModal(false)}
+              showSuccess={() => setShowSuccessModal(true)}
+            />
+            <SuccessModal
+              open={showSuccessModal}
+              closeModal={() => setShowSuccessModal(false)}
+            />
+          </div>
+          <div className={styles.dashboard_portfolio_summary_info}>
+            <div className="flex flex-col justify-between w-10/12 md:w-8/12 h-fit">
+              {data.map((item, id) => (
+                <ChartEntry key={id} {...item} />
+              ))}
+            </div>
+            <div className="w-full mb-4 md:w-3/12 md:mb-0">
+              <Doughnut
+                data={{
+                  labels: data.map(entry => entry.itemLabel),
+                  datasets: [{
+                    label: '',
+                    data: normalizeMinValue(data),
+                    backgroundColor: data.map(entry => entry.color),
+                    borderColor: data.map(entry => entry.color),
+                    borderWidth: 1,
+                  }],
+                }}
+                options={chartOptions}
+              />
+            </div>
+          </div>
         </div>
-        {isProtocol && (
-          <button
-            onClick={() => setShowClaimModal(true)}
-            className="flex items-center justify-evenly gap-1.5 lg:gap-4 bg-white rounded-xl modified-cursor-pointer h-min px-6 py-2 mb-4 md:mb-0"
-          >
-            <CDNImg width={20} src={starknetIcon.src} loading="lazy" />
-            <Typography type={TEXT_TYPE.BUTTON_SMALL} color="background" style={{ lineHeight: "1rem" }}>
-              Claim your reward
-            </Typography>
-          </button>
-        )}
-        <ClaimModal
-          open={showClaimModal}
-          closeModal={() => setShowClaimModal(false)}
-          showSuccess={() => setShowSuccessModal(true)}
-        />
-        <SuccessModal
-          open={showSuccessModal}
-          closeModal={() => setShowSuccessModal(false)}
-        />
-      </div>
-      <div className={styles.dashboard_portfolio_summary_info}>
-        <div className="flex flex-col justify-between w-10/12 md:w-8/12 h-fit">
-          {data.map((item, id) => (
-            <ChartEntry key={id} {...item} />
-          ))}
-        </div>
-        <div className="w-full mb-4 md:w-3/12 md:mb-0">
-          <Doughnut
-            data={{
-              labels: data.map(entry => entry.itemLabel),
-              datasets: [{
-                label: '',
-                data: normalizeMinValue(data),
-                backgroundColor: data.map(entry => entry.color),
-                borderColor: data.map(entry => entry.color),
-                borderWidth: 1,
-              }],
-            }}
-            options={chartOptions}
-          />
-        </div>
-      </div>
-    </div>
-  ) : null;
+      ) : null}
+    </Loading>
+  );
 }
 
 export default PortfolioSummary;

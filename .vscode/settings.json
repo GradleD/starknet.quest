@@ -1,3 +1,10 @@
 {
-  "cSpell.words": ["Braavos", "Starknet", "webp"]
+  "cSpell.words": [
+    "Braavos",
+    "Starknet",
+    "webp"
+  ],
+  "githubPullRequests.ignoredPullRequestBranches": [
+    "testnet"
+  ]
 }
