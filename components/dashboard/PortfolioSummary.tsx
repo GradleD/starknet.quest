@@ -19,6 +19,10 @@ type PortfolioSummaryProps = {
   isProtocol: boolean,
   minSlicePercentage?: number
 }
+// Utility function to format currency
+const formatCurrency = (amount) => {
+  return `$${amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+};
 
 
 const ChartEntry: FunctionComponent<ChartItem> = ({
@@ -27,7 +31,10 @@ const ChartEntry: FunctionComponent<ChartItem> = ({
   itemValue,
   itemValueSymbol
 }) => {
-  const value = itemValueSymbol === '%' ? itemValue + itemValueSymbol : itemValueSymbol + itemValue;
+const formattedValue = itemValueSymbol === '%' 
+    ? `${itemValue}${itemValueSymbol}` 
+    : `${itemValueSymbol}${formatCurrency(itemValue)}`;
+  
   return (
     <div className="flex w-full justify-between my-1">
       <div className="flex flex-row w-full items-center gap-2">
@@ -71,7 +78,7 @@ const PortfolioSummary: FunctionComponent<PortfolioSummaryProps> = ({ title, dat
       tooltip: {
         callbacks: {
           label: function (tooltipItem: TooltipItem<"doughnut">) {
-            return ` ${data[tooltipItem.dataIndex].itemValueSymbol}${data[tooltipItem.dataIndex].itemValue}`;
+            return ` ${item.itemValueSymbol}${formatCurrency(item.itemValue)}`;
           }
         }
       }
