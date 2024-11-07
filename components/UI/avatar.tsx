@@ -18,7 +18,7 @@ type AvatarProps = {
 const Avatar: FunctionComponent<AvatarProps> = ({ address, width = "32" }) => {
   const { starknetIdNavigator } = useContext(StarknetIdJsContext);
 
-  const { data: profileData } = useStarkProfile({ address }); // Fetching profile data using the hook
+  const { data: profile } = useStarkProfile({ address });
 
   const [profile, setProfile] = useState<StarkProfile | null>(null);
 
