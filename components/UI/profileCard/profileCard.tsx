@@ -14,7 +14,7 @@ import xpIcon from "public/icons/xpBadge.svg";
 import useCreationDate from "@hooks/useCreationDate";
 import shareSrc from "public/icons/share.svg";
 import theme from "@styles/theme";
-import EyeIcon from "../iconsComponents/icons/eyeIcon";
+import {EyeIcon,EyeIconSlashed } from "../iconsComponents/icons/eyeIcon";
 import ProfilIcon from "../iconsComponents/icons/profilIcon";
 import Link from "next/link";
 import SocialMediaActions from "../actions/socialmediaActions";
@@ -133,21 +133,18 @@ const ProfileCard: FunctionComponent<ProfileCardProps> = ({
           >
             {identity.domain?.domain || "Unknown Domain"}
           </Typography>
-          <div className={styles.address_div}>
-            <div className="flex items-center gap-2">
-              <Typography
-                type={TEXT_TYPE.BODY_SMALL}
-                className={`${styles.wallet_amount} font-extrabold`}
-              >
-                {totalBalance !== null ? (
-                  `$${totalBalance.toFixed(2)}`
-                ) : (
-                  <Skeleton variant="text" width={60} height={30} />
-                )}
-              </Typography>
-              <EyeIcon />
-            </div>
-          </div>
+         <div className={styles.address_div}>
+    <div className="flex items-center gap-2">
+        <Typography type={TEXT_TYPE.BODY_SMALL} className={`${styles.wallet_amount} font-extrabold`}>
+            {totalBalance !== null ? (hidePortfolio ? "******" : `$${totalBalance.toFixed(2)}`) : (
+                <Skeleton variant="text" width={60} height={30} />
+            )}
+        </Typography>
+        <div onClick={() => setHidePortfolio(!hidePortfolio)} className={styles.pointer}>
+            {hidePortfolio ? <EyeIconSlashed /> : <EyeIcon />}
+        </div>
+    </div>
+</div>
           <div className="flex sm:hidden justify-center py-4">
             <SocialMediaActions identity={identity} />
             {tweetShareLink && (
