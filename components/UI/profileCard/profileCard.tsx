@@ -23,6 +23,7 @@ import { hexToDecimal } from "@utils/feltService";
 import { TEXT_TYPE } from "@constants/typography";
 import Typography from "../typography/typography";
 import { calculateTotalBalance } from "../../../services/argentPortfolioService";
+import Loading from "@components/skeletons/loading";
 const MAX_RETRIES = 1000;
 const RETRY_DELAY = 2000;
 const controller = new AbortController();
@@ -33,6 +34,7 @@ type ProfileCardProps = {
   identity: Identity;
   leaderboardData: LeaderboardToppersData;
   isOwner: boolean;
+  isLoading: boolean;
 };
 
 const ProfileCard: FunctionComponent<ProfileCardProps> = ({
@@ -40,9 +42,11 @@ const ProfileCard: FunctionComponent<ProfileCardProps> = ({
   identity,
   leaderboardData,
   isOwner,
+  isLoading
 }) => {
   const [userXp, setUserXp] = useState<number>();
   const [totalBalance, setTotalBalance] = useState<number | null>(null);
+
   const sinceDate = useCreationDate(identity);
   const formattedAddress = (
     identity.owner.startsWith("0x") ? identity.owner : `0x${identity.owner}`
@@ -60,13 +64,13 @@ const ProfileCard: FunctionComponent<ProfileCardProps> = ({
       let attempts = 0;
       while (true) {
         try {
-          const balance = await calculateTotalBalance(formattedAddress, "USD", {signal});
+          const balance = await calculateTotalBalance(formattedAddress, "USD", { signal });
           setTotalBalance(balance);
           return; // Exit if successful
         } catch (err) {
           attempts++;
           console.error(`Attempt ${attempts} - Error fetching total balance:`, err);
-          
+
           if (attempts >= MAX_RETRIES) {
             console.error("Failed to fetch total balance after multiple attempts.");
           } else {
@@ -102,8 +106,7 @@ const ProfileCard: FunctionComponent<ProfileCardProps> = ({
 
   const tweetShareLink: string = useMemo(() => {
     return `${getTweetLink(
-      `Check out${isOwner ? " my " : " "}Starknet Quest Profile at ${
-        window.location.href
+      `Check out${isOwner ? " my " : " "}Starknet Quest Profile at ${window.location.href
       } #Starknet #StarknetID`
     )}`;
   }, [isOwner]);
@@ -118,36 +121,50 @@ const ProfileCard: FunctionComponent<ProfileCardProps> = ({
             <ProfilIcon width="120" color={theme.palette.secondary.main} />
           )}
         </div>
-
         <div className="flex flex-col h-full justify-center">
-          <Typography
-            type={TEXT_TYPE.BODY_SMALL}
-            color="secondary"
-            className={styles.accountCreationDate}
-          >
-            {sinceDate ? `${sinceDate}` : ""}
-          </Typography>
-          <Typography
-            type={TEXT_TYPE.H2}
-            className={`${styles.profile_name} mt-2`}
-          >
-            {identity.domain?.domain || "Unknown Domain"}
-          </Typography>
-          <div className={styles.address_div}>
-            <div className="flex items-center gap-2">
+          {totalBalance === null ? ( // Check if balance is still loading
+            <>
+              <Skeleton variant="text" width="80%" height={20} />
+              <Skeleton variant="text" width="60%" height={30} className="mt-2" />
+              <div className={styles.address_div}>
+                <div className="flex items-center gap-2">
+                  <Skeleton variant="rectangular" width={100} height={30} />
+                  <EyeIcon />
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
               <Typography
                 type={TEXT_TYPE.BODY_SMALL}
-                className={`${styles.wallet_amount} font-extrabold`}
+                color="secondary"
+                className={styles.accountCreationDate}
               >
-                {totalBalance !== null ? (
-                  `$${totalBalance.toFixed(2)}`
-                ) : (
-                  <Skeleton variant="text" width={60} height={30} />
-                )}
+                {sinceDate ? `${sinceDate}` : ""}
               </Typography>
-              <EyeIcon />
-            </div>
-          </div>
+              <Typography
+                type={TEXT_TYPE.H2}
+                className={`${styles.profile_name} mt-2`}
+              >
+                {identity.domain?.domain || "Unknown Domain"}
+              </Typography>
+              <div className={styles.address_div}>
+                <div className="flex items-center gap-2">
+                  <Typography
+                    type={TEXT_TYPE.BODY_SMALL}
+                    className={`${styles.wallet_amount} font-extrabold`}
+                  >
+                    <Loading isLoading={totalBalance === null} loadingType="skeleton" width="100%" height={30}>
+                      {totalBalance !== null ? `$${totalBalance.toFixed(2)}` : null}
+                    </Loading>
+                  </Typography>
+                  <EyeIcon />
+                </div>
+              </div>
+            </>
+          )}
+
+
           <div className="flex sm:hidden justify-center py-4">
             <SocialMediaActions identity={identity} />
             {tweetShareLink && (

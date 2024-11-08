@@ -11,7 +11,6 @@ import cursorPointer from '../../public/icons/pointer-cursor.png';
 import ClaimModal from "../discover/claimModal";
 import SuccessModal from "../discover/successModal";
 Chart.register(ArcElement, DoughnutController, Tooltip);
-import Loading from "@components/skeletons/loading";
 
 type PortfolioSummaryProps = {
   title: string,
@@ -29,6 +28,7 @@ const ChartEntry: FunctionComponent<ChartItem> = ({
   itemValueSymbol
 }) => {
   const value = itemValueSymbol === '%' ? itemValue + itemValueSymbol : itemValueSymbol + itemValue;
+
   return (
     <div className="flex w-full justify-between my-1">
       <div className="flex flex-row w-full items-center gap-2">
@@ -43,17 +43,8 @@ const ChartEntry: FunctionComponent<ChartItem> = ({
 };
 
 const PortfolioSummary: FunctionComponent<PortfolioSummaryProps> = ({ title, data, totalBalance, isProtocol, minSlicePercentage = 0.05 }) => {
-
-  const [loading, setLoading] = useState(true); // Add loading state
-  // Simulate data fetching
-  useEffect(() => {
-    const fetchData = async () => {
-      // Simulate an API call
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate delay
-      setLoading(false);
-    };
-    fetchData();
-  }, []);
+  
+ 
   const normalizeMinValue = (data: ChartItem[]) => {
     return data.map(entry =>
       Number(entry.itemValue) < totalBalance * minSlicePercentage ?
@@ -62,6 +53,7 @@ const PortfolioSummary: FunctionComponent<PortfolioSummaryProps> = ({ title, dat
     );
   }
 
+   
   const chartOptions: ChartOptions<"doughnut"> = useMemo(() => ({
     elements: {
       arc: {
@@ -93,13 +85,11 @@ const PortfolioSummary: FunctionComponent<PortfolioSummaryProps> = ({ title, dat
     }
   }), [data]);
 
+  
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  return (
-    <Loading isLoading={loading} loadingType="skeleton" width="100%" height={300}>
-
-      {data.length > 0 ? (
+  return data.length > 0 ? (
         <div className={styles.dashboard_portfolio_summary}>
           <div className="flex flex-col md:flex-row w-full justify-between items-center mb-4">
             <div className="mb-4 md:mb-1">
@@ -126,6 +116,8 @@ const PortfolioSummary: FunctionComponent<PortfolioSummaryProps> = ({ title, dat
               closeModal={() => setShowSuccessModal(false)}
             />
           </div>
+
+       
           <div className={styles.dashboard_portfolio_summary_info}>
             <div className="flex flex-col justify-between w-10/12 md:w-8/12 h-fit">
               {data.map((item, id) => (
@@ -149,9 +141,10 @@ const PortfolioSummary: FunctionComponent<PortfolioSummaryProps> = ({ title, dat
             </div>
           </div>
         </div>
-      ) : null}
-    </Loading>
-  );
+      ) : null;
+    
+    
+    
 }
 
 export default PortfolioSummary;
