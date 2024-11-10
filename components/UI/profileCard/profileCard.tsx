@@ -42,7 +42,6 @@ const ProfileCard: FunctionComponent<ProfileCardProps> = ({
   identity,
   leaderboardData,
   isOwner,
-  isLoading
 }) => {
   const [userXp, setUserXp] = useState<number>();
   const [totalBalance, setTotalBalance] = useState<number | null>(null);
@@ -124,6 +123,7 @@ const ProfileCard: FunctionComponent<ProfileCardProps> = ({
         <div className="flex flex-col h-full justify-center">
           {totalBalance === null ? ( // Check if balance is still loading
             <>
+            //Updated the Specific Profile Card Component with skeleton Loading component
               <Skeleton variant="text" width="80%" height={20} />
               <Skeleton variant="text" width="60%" height={30} className="mt-2" />
               <div className={styles.address_div}>
