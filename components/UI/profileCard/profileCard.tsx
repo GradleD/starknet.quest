@@ -45,6 +45,7 @@ const ProfileCard: FunctionComponent<ProfileCardProps> = ({
   identity,
   leaderboardData,
   isOwner,
+  isLoading,
 }) => {
   const { hidePortfolio, setHidePortfolio } = useHidePortfolio();
   const [userXp, setUserXp] = useState<number>();
@@ -122,54 +123,55 @@ const ProfileCard: FunctionComponent<ProfileCardProps> = ({
             <ProfilIcon width="120" color={theme.palette.secondary.main} />
           )}
         </div>
-
         <div className="flex flex-col h-full justify-center">
-          {totalBalance === null ? ( // Check if balance is still loading
-            <>
-            //Updated the Specific Profile Card Component with skeleton Loading component
-              <Skeleton variant="text" width="80%" height={20} />
-              <Skeleton variant="text" width="60%" height={30} className="mt-2" />
-              <div className={styles.address_div}>
-                <div className="flex items-center gap-2">
-                  <Skeleton variant="rectangular" width={100} height={30} />
-                  <EyeIcon />
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-       
+  {isLoading ? (
+    <>
+      {/* Updated the Specific Profile Card Component with skeleton Loading component */}
+      <Skeleton variant="text" width="80%" height={20} />
+      <Skeleton variant="text" width="60%" height={30} className="mt-2" />
+      <div className={styles.address_div}>
+        <div className="flex items-center gap-2">
+          <Skeleton variant="rectangular" width={100} height={30} />
+          <EyeIcon />
+        </div>
+      </div>
+    </>
+  ) : (
+    <>
+      <Typography
+        type={TEXT_TYPE.BODY_SMALL}
+        color="secondary"
+        className={styles.accountCreationDate}
+      >
+        {sinceDate ? `${sinceDate}` : ""}
+      </Typography>
+      <Typography
+        type={TEXT_TYPE.H2}
+        className={`${styles.profile_name} mt-2`}
+      >
+        {identity.domain?.domain || "Unknown Domain"}
+      </Typography>
+      <div className={styles.address_div}>
+        <div className="flex items-center gap-2">
           <Typography
             type={TEXT_TYPE.BODY_SMALL}
-            color="secondary"
-            className={styles.accountCreationDate}
+            className={`${styles.wallet_amount} font-extrabold`}
           >
-            {sinceDate ? `${sinceDate}` : ""}
+            {totalBalance !== null ? (
+              hidePortfolio ? "******" : `$${totalBalance.toFixed(2)}`
+            ) : (
+              <Skeleton variant="text" width={60} height={30} />
+            )}
           </Typography>
-          <Typography
-            type={TEXT_TYPE.H2}
-            className={`${styles.profile_name} mt-2`}
-          >
-            {identity.domain?.domain || "Unknown Domain"}
-          </Typography>
-          <div className={styles.address_div}>
-            <div className="flex items-center gap-2">
-              <Typography
-                type={TEXT_TYPE.BODY_SMALL}
-                className={`${styles.wallet_amount} font-extrabold`}
-              >
-                {totalBalance !== null ? (
-                  hidePortfolio ? "******" : `$${totalBalance.toFixed(2)}`
-                ) : (
-                  <Skeleton variant="text" width={60} height={30} />
-                )}
-              </Typography>
-              <div onClick={() => setHidePortfolio(!hidePortfolio)} className="cursor-pointer">
-                {hidePortfolio ? <EyeIconSlashed /> : <EyeIcon />}
-              </div>
-            </div>
-            </>              
-              )}
+          <div onClick={() => setHidePortfolio(!hidePortfolio)} className="cursor-pointer">
+            {hidePortfolio ? <EyeIconSlashed /> : <EyeIcon />}
+          </div>
+        </div>
+      </div>
+    </>
+  )}
+</div>
+
           <div className="flex sm:hidden justify-center py-4">
             <SocialMediaActions identity={identity} />
             {tweetShareLink && (
