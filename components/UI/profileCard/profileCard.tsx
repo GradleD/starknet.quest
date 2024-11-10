@@ -25,6 +25,7 @@ import Typography from "../typography/typography";
 import { calculateTotalBalance } from "../../../services/argentPortfolioService";
 import Avatar from "../avatar";
 import { useHidePortfolio } from "@hooks/useHidePortfolio";
+import Loading from "@components/skeletons/loading";
 
 const MAX_RETRIES = 1000;
 const RETRY_DELAY = 2000;
@@ -36,6 +37,7 @@ type ProfileCardProps = {
   identity: Identity;
   leaderboardData: LeaderboardToppersData;
   isOwner: boolean;
+  isLoading:boolean;
 };
 
 const ProfileCard: FunctionComponent<ProfileCardProps> = ({
@@ -122,6 +124,21 @@ const ProfileCard: FunctionComponent<ProfileCardProps> = ({
         </div>
 
         <div className="flex flex-col h-full justify-center">
+          {totalBalance === null ? ( // Check if balance is still loading
+            <>
+            //Updated the Specific Profile Card Component with skeleton Loading component
+              <Skeleton variant="text" width="80%" height={20} />
+              <Skeleton variant="text" width="60%" height={30} className="mt-2" />
+              <div className={styles.address_div}>
+                <div className="flex items-center gap-2">
+                  <Skeleton variant="rectangular" width={100} height={30} />
+                  <EyeIcon />
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+       
           <Typography
             type={TEXT_TYPE.BODY_SMALL}
             color="secondary"
@@ -151,7 +168,8 @@ const ProfileCard: FunctionComponent<ProfileCardProps> = ({
                 {hidePortfolio ? <EyeIconSlashed /> : <EyeIcon />}
               </div>
             </div>
-          </div>
+            </>              
+              )}
           <div className="flex sm:hidden justify-center py-4">
             <SocialMediaActions identity={identity} />
             {tweetShareLink && (
