@@ -117,79 +117,79 @@ const ProfileCard: FunctionComponent<ProfileCardProps> = ({
     <div className={styles.dashboard_profile_card}>
       <div className={styles.left}>
         <div className={styles.profile_picture_div}>
-          { formattedAddress?.length !== 0 ? ( // show the avatar of the address in the URL
+          {formattedAddress?.length !== 0 ? (
             <Avatar width="120" address={formattedAddress} />
           ) : (
             <ProfilIcon width="120" color={theme.palette.secondary.main} />
           )}
         </div>
         <div className="flex flex-col h-full justify-center">
-  {isLoading ? (
-    <>
-      {/* Updated the Specific Profile Card Component with skeleton Loading component */}
-      <Skeleton variant="text" width="80%" height={20} />
-      <Skeleton variant="text" width="60%" height={30} className="mt-2" />
-      <div className={styles.address_div}>
-        <div className="flex items-center gap-2">
-          <Skeleton variant="rectangular" width={100} height={30} />
-          <EyeIcon />
-        </div>
-      </div>
-    </>
-  ) : (
-    <>
-      <Typography
-        type={TEXT_TYPE.BODY_SMALL}
-        color="secondary"
-        className={styles.accountCreationDate}
-      >
-        {sinceDate ? `${sinceDate}` : ""}
-      </Typography>
-      <Typography
-        type={TEXT_TYPE.H2}
-        className={`${styles.profile_name} mt-2`}
-      >
-        {identity.domain?.domain || "Unknown Domain"}
-      </Typography>
-      <div className={styles.address_div}>
-        <div className="flex items-center gap-2">
-          <Typography
-            type={TEXT_TYPE.BODY_SMALL}
-            className={`${styles.wallet_amount} font-extrabold`}
-          >
-            {totalBalance !== null ? (
-              hidePortfolio ? "******" : `$${totalBalance.toFixed(2)}`
-            ) : (
-              <Skeleton variant="text" width={60} height={30} />
-            )}
-          </Typography>
-          <div onClick={() => setHidePortfolio(!hidePortfolio)} className="cursor-pointer">
-            {hidePortfolio ? <EyeIconSlashed /> : <EyeIcon />}
-          </div>
-        </div>
-      </div>
-    </>
-  )}
-</div>
-
-          <div className="flex sm:hidden justify-center py-4">
-            <SocialMediaActions identity={identity} />
-            {tweetShareLink && (
-              <Link href={tweetShareLink} target="_blank" rel="noreferrer">
-                <div className={styles.right_share_button}>
-                  <CDNImage
-                    src={shareSrc}
-                    width={20}
-                    height={20}
-                    alt="share-icon"
-                  />
-                  <Typography type={TEXT_TYPE.BODY_DEFAULT}>Share</Typography>
+          {isLoading ? (
+            <>
+              {/* Updated the Specific Profile Card Component with skeleton Loading component */}
+              <Skeleton variant="text" width="80%" height={20} />
+              <Skeleton variant="text" width="60%" height={30} className="mt-2" />
+              <div className={styles.address_div}>
+                <div className="flex items-center gap-2">
+                  <Skeleton variant="rectangular" width={100} height={30} />
+                  <EyeIcon />
                 </div>
-              </Link>
-            )}
-          </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <Typography
+                type={TEXT_TYPE.BODY_SMALL}
+                color="secondary"
+                className={styles.accountCreationDate}
+              >
+                {sinceDate ? `${sinceDate}` : ""}
+              </Typography>
+              <Typography
+                type={TEXT_TYPE.H2}
+                className={`${styles.profile_name} mt-2`}
+              >
+                {identity.domain?.domain || "Unknown Domain"}
+              </Typography>
+              <div className={styles.address_div}>
+                <div className="flex items-center gap-2">
+                  <Typography
+                    type={TEXT_TYPE.BODY_SMALL}
+                    className={`${styles.wallet_amount} font-extrabold`}
+                  >
+                    {totalBalance !== null ? (
+                      hidePortfolio ? "******" : `$${totalBalance.toFixed(2)}`
+                    ) : (
+                      <Skeleton variant="text" width={60} height={30} />
+                    )}
+                  </Typography>
+                  <div onClick={() => setHidePortfolio(!hidePortfolio)} className="cursor-pointer">
+                    {hidePortfolio ? <EyeIconSlashed /> : <EyeIcon />}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+  
+        <div className="flex sm:hidden justify-center py-4">
+          <SocialMediaActions identity={identity} />
+          {tweetShareLink && (
+            <Link href={tweetShareLink} target="_blank" rel="noreferrer">
+              <div className={styles.right_share_button}>
+                <CDNImage
+                  src={shareSrc}
+                  width={20}
+                  height={20}
+                  alt="share-icon"
+                />
+                <Typography type={TEXT_TYPE.BODY_DEFAULT}>Share</Typography>
+              </div>
+            </Link>
+          )}
         </div>
       </div>
+  
       <div className={styles.right}>
         <div className="hidden sm:flex">
           <div className={styles.right_top}>
@@ -211,7 +211,7 @@ const ProfileCard: FunctionComponent<ProfileCardProps> = ({
             </div>
           </div>
         </div>
-
+  
         <div className={styles.right_bottom}>
           {leaderboardData && leaderboardData.total_users > 0 && (
             <div className={styles.right_bottom_content}>
@@ -252,6 +252,7 @@ const ProfileCard: FunctionComponent<ProfileCardProps> = ({
         </div>
       </div>
     </div>
+  
   );
 };
 

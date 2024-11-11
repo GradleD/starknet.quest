@@ -83,6 +83,8 @@ export default function Page({ params }: AddressOrDomainProps) {
   const [identity, setIdentity] = useState<Identity>();
   const [notFound, setNotFound] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [completedQuests, setCompletedQuests] = useState<CompletedQuests>([]);
   const [userRanking, setUserRanking] = useState<RankingData>({
     first_elt_position: -1,
@@ -102,6 +104,8 @@ export default function Page({ params }: AddressOrDomainProps) {
     },
     []
   );
+
+
 
   useEffect(() => {
     if (!address) setIsOwner(false);
@@ -201,6 +205,7 @@ export default function Page({ params }: AddressOrDomainProps) {
     setQuestsLoading(false);
   }, []);
 
+
   const calculateAssetPercentages = async (
     userTokens: ArgentUserToken[],
     tokens: ArgentTokenMap,
@@ -289,6 +294,10 @@ export default function Page({ params }: AddressOrDomainProps) {
         assetValues[symbol] = (assetValues[symbol] || 0) + value;
       }
     });
+
+
+
+
     // Convert to percentages and format
     const sortedAssets = Object.entries(assetValues)
       .sort(([, a], [, b]) => b - a)
@@ -397,8 +406,10 @@ export default function Page({ params }: AddressOrDomainProps) {
     tokens: ArgentTokenMap,
     dapps: ArgentDappMap,
   ) => {
+
     for await (const token of userTokens) {
       const tokenInfo = tokens[token.tokenAddress];
+
       if (tokenInfo.dappId && token.tokenBalance != "0") {
         let itemValue = 0;
         const currentTokenBalance = await calculateTokenPrice(
@@ -501,9 +512,9 @@ export default function Page({ params }: AddressOrDomainProps) {
   };
 
   const fetchPortfolioProtocols = useCallback(async (data: {
-    dapps: ArgentDappMap, 
-    tokens: ArgentTokenMap, 
-    userTokens: ArgentUserToken[], 
+    dapps: ArgentDappMap,
+    tokens: ArgentTokenMap,
+    userTokens: ArgentUserToken[],
     userDapps: ArgentUserDapp[]
   }) => {
     const { dapps, tokens, userTokens, userDapps } = data;
@@ -529,6 +540,8 @@ export default function Page({ params }: AddressOrDomainProps) {
       console.log("Error while calculating address portfolio stats", error);
     }
   }, [address]);
+
+
 
   const fetchPortfolioData = useCallback(async (addr: string, abortController: AbortController) => {
     setLoadingProtocols(true);
@@ -584,6 +597,10 @@ export default function Page({ params }: AddressOrDomainProps) {
   useEffect(() => {
     setInitProfile(false);
   }, [address, addressOrDomain]);
+
+
+
+
 
   useEffect(() => {
     if (
@@ -723,6 +740,7 @@ export default function Page({ params }: AddressOrDomainProps) {
             rankingData={userRanking}
             leaderboardData={leaderboardData}
             isOwner={isOwner}
+            isLoading={isLoading}
           />
         ) : (
           <ProfileCardSkeleton />
@@ -731,31 +749,29 @@ export default function Page({ params }: AddressOrDomainProps) {
 
       {/* Portfolio charts */}
       <div className={styles.dashboard_portfolio_summary_container}>
-        {loadingProtocols ? ( // Change for corresponding state
+        {(!portfolioAssets || !portfolioProtocols || loadingProtocols) ? (
           <PortfolioSummarySkeleton />
         ) : (
-          <PortfolioSummary
-            title="Portfolio by assets type"
-            data={portfolioAssets}
-            totalBalance={portfolioAssets.reduce(
-              (sum, item) => sum + Number(item.itemValue),
-              0
-            )}
-            isProtocol={false}
-          />
-        )}
-        {loadingProtocols ? (
-          <PortfolioSummarySkeleton />
-        ) : (
-          <PortfolioSummary
-            title="Portfolio by protocol usage"
-            data={portfolioProtocols}
-            totalBalance={portfolioProtocols.reduce(
-              (sum, item) => sum + Number(item.itemValue),
-              0
-            )}
-            isProtocol={true}
-          />
+          <>
+            <PortfolioSummary
+              title="Portfolio by assets type"
+              data={portfolioAssets}
+              totalBalance={portfolioAssets.reduce(
+                (sum, item) => sum + Number(item.itemValue),
+                0
+              )}
+              isProtocol={false}
+            />
+            <PortfolioSummary
+              title="Portfolio by protocol usage"
+              data={portfolioProtocols}
+              totalBalance={portfolioProtocols.reduce(
+                (sum, item) => sum + Number(item.itemValue),
+                0
+              )}
+              isProtocol={true}
+            />
+          </>
         )}
       </div>
 
