@@ -83,7 +83,7 @@ export default function Page({ params }: AddressOrDomainProps) {
   const [identity, setIdentity] = useState<Identity>();
   const [notFound, setNotFound] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [completedQuests, setCompletedQuests] = useState<CompletedQuests>([]);
   const [userRanking, setUserRanking] = useState<RankingData>({
@@ -579,7 +579,7 @@ export default function Page({ params }: AddressOrDomainProps) {
     } finally {
       setLoadingProtocols(false);
     }
-  }, [fetchPortfolioProtocols, fetchPortfolioAssets]);
+  }, [fetchPortfolioProtocols, fetchPortfolioAssets, showNotification]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -589,7 +589,11 @@ export default function Page({ params }: AddressOrDomainProps) {
     fetchPageData(identity.owner);
     fetchPortfolioData(identity.owner, abortController);
 
-    return () => abortController.abort();
+    return () => {
+      abortController.abort();
+      setLoadingProtocols(false);
+      setIsLoading(false);
+    };
   }, [identity]);
 
   useEffect(() => setNotFound(false), [dynamicRoute]);
@@ -749,6 +753,7 @@ export default function Page({ params }: AddressOrDomainProps) {
 
       {/* Portfolio charts */}
       <div className={styles.dashboard_portfolio_summary_container}>
+
         {(!portfolioAssets || !portfolioProtocols || loadingProtocols) ? (
           <PortfolioSummarySkeleton />
         ) : (
