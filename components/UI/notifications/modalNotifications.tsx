@@ -15,12 +15,6 @@ type ModalNotificationsProps = {
   informationNotifications: SQInfoData[];
 };
 
-const modalStyles = {
-  portal: {
-    overflow: 'auto'
-  }
-}
-
 const ModalNotifications: FunctionComponent<ModalNotificationsProps> = ({
   closeModal,
   open,
@@ -30,8 +24,6 @@ const ModalNotifications: FunctionComponent<ModalNotificationsProps> = ({
   return (
     <Modal
       disableAutoFocus
-      disableScrollLock
-      disableEnforceFocus
       open={open}
       onClose={closeModal}
       aria-labelledby="modal-modal-title"
