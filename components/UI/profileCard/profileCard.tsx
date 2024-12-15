@@ -58,7 +58,7 @@ const ProfileCard: FunctionComponent<ProfileCardProps> = ({
     () =>
       (identity.owner.startsWith('0x')
         ? identity.owner
-        : `0x${address}`) as Address,
+        : address) as Address,
     [identity.owner]
   );
 
