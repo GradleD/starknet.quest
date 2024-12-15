@@ -22,6 +22,7 @@ import { AdminService } from "@services/authService";
 import { useNotification } from "@context/NotificationProvider";
 import Button from "@components/UI/button";
 import { useRouter } from "next/navigation";
+import DownloadQuestParticipantsButton from './DownloadQuestParticipantsButton';
 
 type QuestDetailsProps = {
   quest: QuestDocument;
@@ -127,6 +128,12 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
           return { imgSrc: nft.img, level: nft.level };
         })}
       />
+
+      <div className="w-full flex justify-center my-6">
+        <div className="w-full sm:w-fit">
+          <DownloadQuestParticipantsButton questId={quest.id} />
+        </div>
+      </div>
 
       <div className={styles.descriptionContainer}>
         {quest.name === "loading" ? (
