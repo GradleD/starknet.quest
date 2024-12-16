@@ -67,8 +67,6 @@ const Quest: FunctionComponent<QuestPageProps> = ({
           ) {
             setHasNftReward(true);
           }
-          console.log("data: ", data);
-          if (data !== null) data.banner = QuestDefault.banner;
           setQuest(data as QuestDocument);
         }
       })
