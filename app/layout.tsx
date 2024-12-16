@@ -4,14 +4,14 @@ import { Providers } from "./provider";
 import "@styles/globals.css";
 import Navbar from "@components/UI/navbar";
 import Footer from "@components/UI/footer";
-import { ThemeProvider } from "@mui/material";
-import { theme } from "@components/UI/theme";
 
 export const metadata: Metadata = {
   title: "Starknet Quest",
   description:
     "Starknet Quest helps protocols attract and retain users by creating gamified quest experiences on Starknet.",
-  metadataBase: process.env.NEXT_PUBLIC_APP_LINK ? new URL(process.env.NEXT_PUBLIC_APP_LINK) : undefined,
+  metadataBase: process.env.NEXT_PUBLIC_APP_LINK
+    ? new URL(process.env.NEXT_PUBLIC_APP_LINK)
+    : undefined,
   openGraph: {
     title: "Starknet Quest - Accomplish quests to get unique NFTs.",
     description:
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/visuals/starknetquest.webp",
-        width: 680, 
+        width: 680,
         height: 680,
       },
     ],
@@ -55,13 +55,9 @@ export default function RootLayout({
     <html lang="en">
       <body className="default_background_color">
         <Providers>
-          <ThemeProvider theme={theme}>
-            <Navbar />
-            <main className="mt-[48px]">
-              {children}
-            </main>
-            <Footer />
-          </ThemeProvider>
+          <Navbar />
+          <main className="mt-[48px]">{children}</main>
+          <Footer />
         </Providers>
       </body>
     </html>
