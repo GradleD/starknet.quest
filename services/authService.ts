@@ -592,6 +592,27 @@ const addUser = async (params: AddUser) => {
     console.log("Error while adding user", err);
   }
 };
+
+const getBoostWinnersByBoostId = async (params: { id: number }) => {
+  try {
+    const response = await fetch(
+      `${baseurl}/admin/boosts/get_boost_winners?boost_id=${params.id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch boost winners");
+    }
+    return await response.json();
+  } catch (err) {
+    console.log("Error while getting boost winners by boost id", err);
+    throw err;
+  }
+};
 export const AdminService = {
   login,
   getQuests,
@@ -628,4 +649,6 @@ export const AdminService = {
   createNftUri,
   updateNftUri,
   addUser,
+  getBoostWinnersByBoostId,
 };
+export { getBoostWinnersByBoostId };

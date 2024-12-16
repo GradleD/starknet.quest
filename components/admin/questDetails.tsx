@@ -10,7 +10,7 @@ import React, {
 import styles from "@styles/quests.module.css";
 import { useAccount } from "@starknet-react/core";
 import { hexToDecimal } from "@utils/feltService";
-import { NFTItem, QuestDocument, UserTask } from "types/backTypes";
+import { NFTItem, QuestDocument, UserTask, ClaimableQuestDocument} from "types/backTypes";
 import { Skeleton } from "@mui/material";
 import TasksSkeleton from "@components/skeletons/tasksSkeleton";
 import { generateCodeChallenge } from "@utils/codeChallenge";
@@ -22,9 +22,11 @@ import { AdminService } from "@services/authService";
 import { useNotification } from "@context/NotificationProvider";
 import Button from "@components/UI/button";
 import { useRouter } from "next/navigation";
+import DownloadBoostWinnersButton from "./DownloadBoostWinnersButton";
 
-type QuestDetailsProps = {
+type QuestDetailsProps = {  
   quest: QuestDocument;
+  boost: ClaimableQuestDocument; 
   taskId?: string;
   res?: string;
   errorMsg?: string;
@@ -38,6 +40,7 @@ type QuestDetailsProps = {
 
 const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
   quest,
+  boost,
   setShowDomainPopup,
   hasRootDomain,
   hasNftReward,
@@ -52,6 +55,7 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
   const [customError, setCustomError] = useState<string>("");
   const { showNotification } = useNotification();
   const questId = quest?.id?.toString();
+  const boostId = boost?.id?.toString();
 
   // this fetches all tasks of this quest from db
   useEffect(() => {
@@ -221,8 +225,7 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
             />
           </>
         )}
-      </div>
-
+      </div>    
       <div className="w-full flex justify-center gap-8">
         <div className="w-fit">
           <Button onClick={handleNavigate}>
@@ -234,6 +237,9 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
             <p>Go To Quest</p>
           </Button>
         </div>
+        <div className="w-fit">
+          <DownloadBoostWinnersButton boostId={boostId} />
+        </div>  
       </div>
     </>
   );
