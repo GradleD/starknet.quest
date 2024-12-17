@@ -132,12 +132,6 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
         })}
       />
 
-      <div className="w-full flex justify-center my-6">
-        <div className="w-full sm:w-fit">
-          <DownloadQuestParticipantsButton questId={quest.id} />
-        </div>
-      </div>
-
       <div className={styles.descriptionContainer}>
         {quest.name === "loading" ? (
           <Skeleton
@@ -245,12 +239,16 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
           </Button>
         </div>
         {isEdit && (
-          <div className="w-fit">
-            <DownloadQuestUsersButton questId={questId} />
-          </div>
+          <>
+            <div className="w-fit">
+              <DownloadQuestUsersButton questId={questId} />
+            </div>
+            <div className="w-fit">
+              <DownloadQuestParticipantsButton questId={quest.id} />
+            </div>
+          </>
         )}
       </div>
-
     </>
   );
 };
