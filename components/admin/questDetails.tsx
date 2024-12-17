@@ -227,7 +227,7 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
         )}
       </div>
 
-      <div className="w-full flex justify-center gap-8">
+      <div className="w-full flex justify-center gap-8 flex-wrap">
         <div className="w-fit">
           <Button onClick={handleNavigate}>
             <p>Done</p>
