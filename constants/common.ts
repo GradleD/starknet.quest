@@ -22,6 +22,15 @@ export const QuestDefault = {
   additional_desc: null,
   visible: false,
   boosts: [],
+  banner: {
+    questId: "",
+    tag: "optional",
+    title: "loading",
+    description: "loading",
+    cta: "",
+    href: "",
+    image: "",
+  },
 };
 
 export const basicAlphabet = "abcdefghijklmnopqrstuvwxyz0123456789-";
