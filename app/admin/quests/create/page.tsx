@@ -42,6 +42,8 @@ export default function Page() {
   const { showNotification } = useNotification();
   const [finalQuestData, setFinalQuestData] =
     useState<typeof QuestDefault>(QuestDefault);
+
+  
   const [buttonLoading, setButtonLoading] = useState(false);
 
   useEffect(() => {
@@ -494,6 +496,7 @@ export default function Page() {
       return (
         <AdminQuestDetails
           quest={finalQuestData}
+          boost={finalQuestData}
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           setShowDomainPopup={() => { }}
           hasRootDomain={false}

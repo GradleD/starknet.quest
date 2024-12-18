@@ -820,6 +820,7 @@ export default function Page({ params }: QuestIdProps) {
       return (
         <AdminQuestDetails
           quest={questData}
+          boost={questData}
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           setShowDomainPopup={() => {}}
           hasRootDomain={false}
