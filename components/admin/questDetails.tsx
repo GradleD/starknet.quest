@@ -23,7 +23,9 @@ import { AdminService } from "@services/authService";
 import { useNotification } from "@context/NotificationProvider";
 import Button from "@components/UI/button";
 import { useRouter } from "next/navigation";
+import DownloadQuestParticipantsButton from './DownloadQuestParticipantsButton';
 import DownloadBoostWinnersButton from "./DownloadBoostWinnersButton";
+
 
 type QuestDetailsProps = {
   quest: QuestDocument;
@@ -229,7 +231,7 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
         )}
       </div>
 
-      <div className="w-full flex justify-center gap-8">
+      <div className="w-full flex justify-center gap-8 flex-wrap">
         <div className="w-fit">
           <Button onClick={handleNavigate}>
             <p>Done</p>
@@ -246,12 +248,16 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
           </div>
         )}
         {isEdit && (
-          <div className="w-fit">
-            <DownloadQuestUsersButton questId={questId} />
-          </div>
+          <>
+            <div className="w-fit">
+              <DownloadQuestUsersButton questId={questId} />
+            </div>
+            <div className="w-fit">
+              <DownloadQuestParticipantsButton questId={quest.id} />
+            </div>
+          </>
         )}
       </div>
-
     </>
   );
 };
