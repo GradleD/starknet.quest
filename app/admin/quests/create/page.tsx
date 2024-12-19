@@ -496,7 +496,6 @@ export default function Page() {
       return (
         <AdminQuestDetails
           quest={finalQuestData}
-          boost={finalQuestData}
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           setShowDomainPopup={() => { }}
           hasRootDomain={false}

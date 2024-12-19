@@ -10,7 +10,7 @@ import React, {
 import styles from "@styles/quests.module.css";
 import { useAccount } from "@starknet-react/core";
 import { hexToDecimal } from "@utils/feltService";
-import { ClaimableQuestDocument, NFTItem, QuestDocument, UserTask } from "types/backTypes";
+import {NFTItem, QuestDocument, UserTask } from "types/backTypes";
 import { Skeleton } from "@mui/material";
 import TasksSkeleton from "@components/skeletons/tasksSkeleton";
 import { generateCodeChallenge } from "@utils/codeChallenge";
@@ -27,7 +27,6 @@ import DownloadBoostWinnersButton from "./DownloadBoostWinnersButton";
 
 type QuestDetailsProps = {
   quest: QuestDocument;
-  boost: ClaimableQuestDocument;
   taskId?: string;
   res?: string;
   errorMsg?: string;
@@ -42,7 +41,6 @@ type QuestDetailsProps = {
 
 const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
   quest,
-  boost,
   setShowDomainPopup,
   hasRootDomain,
   hasNftReward,
@@ -58,8 +56,9 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
   const [customError, setCustomError] = useState<string>("");
   const { showNotification } = useNotification();
   const questId = quest?.id?.toString();
-  const boostId = boost.id?.toString();
+  const boostId = quest?.boosts[0].boostId.toString();
 
+  
   // this fetches all tasks of this quest from db
   useEffect(() => {
     if (!questId) return;
@@ -241,9 +240,11 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
             <p>Go To Quest</p>
           </Button>
         </div>
-        <div className="w-fit">
-          <DownloadBoostWinnersButton boostId={boostId} />
-        </div>  
+        {isEdit && quest.boosts?.length > 0 && (
+          <div className="w-fit">
+            <DownloadBoostWinnersButton boostId={boostId} />
+          </div>
+        )}
         {isEdit && (
           <div className="w-fit">
             <DownloadQuestUsersButton questId={questId} />

@@ -22,6 +22,7 @@ type QuestDocument = {
   visible: boolean;
   rewards_description: string | null;
   additional_desc: string | null;
+  boosts: ClaimableQuestDocument[];
 };
 
 type ClaimableQuestDocument = QuestDocument & {

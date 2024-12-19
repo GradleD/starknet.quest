@@ -1,6 +1,5 @@
 export const QuestDefault = {
   id: 0,
-  boostId: 0,
   name: "loading",
   desc: "loading",
   issuer: "loading",

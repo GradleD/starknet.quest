@@ -633,7 +633,7 @@ const getQuestParticipantsByQuestId = async (params: { id: number }) => {
   }
 }; 
 
-const getBoostWinnersByBoostId = async (params: { id: number }) => {
+export const getBoostWinnersByBoostId = async (params: { id: number }) => {
   try {
     const response = await fetch(
       `${baseurl}/admin/boosts/get_boost_winners?boost_id=${params.id}`,
@@ -694,4 +694,3 @@ export const AdminService = {
   getQuestParticipantsByQuestId,
   getBoostWinnersByBoostId,
 };
-export { getBoostWinnersByBoostId };
