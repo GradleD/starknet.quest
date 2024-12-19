@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "@components/UI/button";
 import { useNotification } from "@context/NotificationProvider";
-import { getBoostWinnersByBoostId } from "@services/authService";
+import { AdminService } from '@services/authService';
 
 type DownloadBoostWinnersButtonProps = {
   boostId: string;
@@ -12,7 +12,7 @@ const DownloadBoostWinnersButton: React.FC<DownloadBoostWinnersButtonProps> = ({
 
   const handleDownload = async () => {
     try {
-      const data = await getBoostWinnersByBoostId({ id: Number(boostId) });
+      const data = await AdminService.getBoostWinnersByBoostId({ id: Number(boostId) });
 
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
