@@ -3,7 +3,6 @@ import type { Metadata, Viewport } from "next";
 import { Providers } from "./provider";
 import "@styles/globals.css";
 import Navbar from "@components/UI/navbar";
-import Footer from "@components/UI/footer";
 import { ThemeProvider } from "@mui/material";
 import { theme } from "@components/UI/theme";
 
@@ -31,13 +30,6 @@ export const metadata: Metadata = {
   icons: {
     icon: "/visuals/starknetquestLogo.svg",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Starknet Quest - Accomplish quests to get unique NFTs.",
-    description:
-      "Starknet Quest help protocols attract and retain users by creating gamified quest experiences on Starknet.",
-    images: ["/visuals/starknetquest.webp"],
-  },
 };
 
 export const viewport: Viewport = {
@@ -60,7 +52,6 @@ export default function RootLayout({
             <main className="mt-[48px]">
               {children}
             </main>
-            <Footer />
           </ThemeProvider>
         </Providers>
       </body>
