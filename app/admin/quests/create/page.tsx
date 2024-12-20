@@ -408,7 +408,14 @@ export default function Page() {
               desc: step.data.contract_desc,
               href: step.data.contract_href,
               cta: step.data.contract_cta,
-              calls: JSON.parse(step.data.contract_calls),
+              calls: (() => {
+                try {
+                  return JSON.parse(step.data.contract_calls);
+                } catch (error) {
+                  showNotification("Invalid contract calls format", "error");
+                  throw error;
+                }
+              })(),
             });
             if (response) step.data.id = response.id;
           } catch (error) {
@@ -419,7 +426,6 @@ export default function Page() {
       }
 
       setSteps([...steps]);
-      setButtonLoading(false);
       setCurrentPage((prev) => prev + 1);
       
     } finally {
