@@ -248,7 +248,11 @@ export default function Page() {
 
   const handleCreateTask = useCallback(async () => {
     setButtonLoading(true);
-    steps.map(async (step) => {
+    
+    const unsavedSteps = steps.filter(step => !step.data.id);
+    console.log("Steps to save:", unsavedSteps);
+    
+    for (const step of unsavedSteps) {
       if (step.type === "Quiz") {
         if (
           step.data.quiz_name?.length === 0 ||
@@ -258,7 +262,7 @@ export default function Page() {
           step.data.quiz_help_link?.length === 0
         ) {
           showNotification("Please fill all fields for Quiz", "info");
-          return;
+          continue;
         }
         const response = await AdminService.createQuiz({
           quest_id: questId,
@@ -268,52 +272,54 @@ export default function Page() {
           cta: step.data.quiz_cta,
           help_link: step.data.quiz_help_link,
         });
-        for (const question of step.data.questions) {
-          try {
-            await AdminService.createQuizQuestion({
-              quiz_id: response.quiz_id,
-              question: question.question,
-              options: question.options,
-              correct_answers: question.correct_answers,
-            });
-          } catch (error) {
-            console.error("Error executing promise:", error);
+  
+        if (response) {
+          for (const question of step.data.questions) {
+            try {
+              await AdminService.createQuizQuestion({
+                quiz_id: response.quiz_id,
+                question: question.question,
+                options: question.options,
+                correct_answers: question.correct_answers,
+              });
+            } catch (error) {
+              console.error("Error executing promise:", error);
+            }
           }
+          step.data.id = response.id;
         }
-      }
-      if (step.type === "TwitterFw") {
+      } else if (step.type === "TwitterFw") {
         if (
           step.data.twfw_name?.length === 0 ||
           step.data.twfw_desc?.length === 0 ||
           step.data.twfw_username?.length === 0
         ) {
           showNotification("Please fill all fields for Twitter Follow", "info");
-          return;
+          continue;
         }
-        await AdminService.createTwitterFw({
+        const response = await AdminService.createTwitterFw({
           quest_id: questId,
           name: step.data.twfw_name,
           desc: step.data.twfw_desc,
           username: step.data.twfw_username,
         });
+        if (response) step.data.id = response.id;
       } else if (step.type === "TwitterRw") {
         if (
           step.data.twrw_name?.length === 0 ||
           step.data.twrw_desc?.length === 0 ||
           step.data.twrw_post_link?.length === 0
         ) {
-          showNotification(
-            "Please fill all fields for Twitter Retweet",
-            "info"
-          );
-          return;
+          showNotification("Please fill all fields for Twitter Retweet", "info");
+          continue;
         }
-        await AdminService.createTwitterRw({
+        const response = await AdminService.createTwitterRw({
           quest_id: questId,
           name: step.data.twrw_name,
           desc: step.data.twrw_desc,
           post_link: step.data.twrw_post_link,
         });
+        if (response) step.data.id = response.id;
       } else if (step.type === "Discord") {
         if (
           step.data.dc_name?.length === 0 ||
@@ -322,15 +328,16 @@ export default function Page() {
           step.data.dc_guild_id?.length === 0
         ) {
           showNotification("Please fill all fields for Discord", "info");
-          return;
+          continue;
         }
-        await AdminService.createDiscord({
+        const response = await AdminService.createDiscord({
           quest_id: questId,
           name: step.data.dc_name,
           desc: step.data.dc_desc,
           invite_link: step.data.dc_invite_link,
           guild_id: step.data.dc_guild_id,
         });
+        if (response) step.data.id = response.id;
       } else if (step.type === "Custom") {
         if (
           step.data.custom_name?.length === 0 ||
@@ -339,10 +346,10 @@ export default function Page() {
           step.data.custom_href?.length === 0 ||
           step.data.custom_api?.length === 0
         ) {
-          showNotification("Please fill all fields for Discord", "info");
-          return;
+          showNotification("Please fill all fields for Custom", "info");
+          continue;
         }
-        await AdminService.createCustom({
+        const response = await AdminService.createCustom({
           quest_id: questId,
           name: step.data.custom_name,
           desc: step.data.custom_desc,
@@ -350,15 +357,17 @@ export default function Page() {
           href: step.data.custom_href,
           api: step.data.custom_api,
         });
+        if (response) step.data.id = response.id;
       } else if (step.type === "Domain") {
-        await AdminService.createDomain({
+        const response = await AdminService.createDomain({
           quest_id: questId,
           name: step.data.domain_name,
           desc: step.data.domain_desc,
         });
+        if (response) step.data.id = response.id;
       } else if (step.type === "Balance") {
         try {
-          await AdminService.createBalance({
+          const response = await AdminService.createBalance({
             quest_id: questId,
             name: step.data.balance_name,
             desc: step.data.balance_desc,
@@ -366,12 +375,13 @@ export default function Page() {
             cta: step.data.balance_cta,
             href: step.data.balance_href,
           });
+          if (response) step.data.id = response.id;
         } catch (error) {
           console.error("Error while creating balance task:", error);
         }
       } else if (step.type === "CustomApi") {
         try {
-          await AdminService.createCustomApi({
+          const response = await AdminService.createCustomApi({
             quest_id: questId,
             name: step.data.api_name,
             desc: step.data.api_desc,
@@ -380,13 +390,13 @@ export default function Page() {
             href: step.data.api_href,
             regex: step.data.api_regex
           });
+          if (response) step.data.id = response.id;
         } catch (error) {
-          console.error("Error while creating balance task:", error);
+          console.error("Error while creating CustomApi task:", error);
         }
-
       } else if (step.type === "Contract") {
         try {
-          await AdminService.createContract({
+          const response = await AdminService.createContract({
             quest_id: questId,
             name: step.data.contract_name,
             desc: step.data.contract_desc,
@@ -394,15 +404,18 @@ export default function Page() {
             cta: step.data.contract_cta,
             calls: JSON.parse(step.data.contract_calls),
           });
+          if (response) step.data.id = response.id;
         } catch (error) {
           console.error("Error while creating contract task:", error);
           showNotification(`Error adding ${step.type} task: ${error}`, "error");
         }
       }
-    });
+    }
+  
+    setSteps([...steps]);
     setButtonLoading(false);
     setCurrentPage((prev) => prev + 1);
-  }, [steps]);
+  }, [steps, questId]);
 
   const handleRemoveStep = useCallback(
     (index: number) => {
