@@ -20,7 +20,6 @@ export default function RootLayout({
         <Providers>
           <Navbar />
           <main className="mt-[48px]">{children}</main>
-          <Footer />
           {pathname !== "/" && <Footer />}
         </Providers>
       </body>
