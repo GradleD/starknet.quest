@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import React, {
   ReactNode,
@@ -10,7 +10,7 @@ import React, {
 import styles from "@styles/quests.module.css";
 import { useAccount } from "@starknet-react/core";
 import { hexToDecimal } from "@utils/feltService";
-import {NFTItem, QuestDocument, UserTask } from "types/backTypes";
+import { NFTItem, QuestDocument, UserTask } from "types/backTypes";
 import { Skeleton } from "@mui/material";
 import TasksSkeleton from "@components/skeletons/tasksSkeleton";
 import { generateCodeChallenge } from "@utils/codeChallenge";
@@ -18,14 +18,13 @@ import Timer from "@components/quests/timer";
 import NftImage from "@components/quests/nftImage";
 import Task from "@components/quests/task";
 import Reward from "@components/quests/reward";
-import DownloadQuestUsersButton from "@components/quests/downloadQuestUsersButton"
+import DownloadQuestUsersButton from "@components/quests/downloadQuestUsersButton";
 import { AdminService } from "@services/authService";
 import { useNotification } from "@context/NotificationProvider";
 import Button from "@components/UI/button";
 import { useRouter } from "next/navigation";
-import DownloadQuestParticipantsButton from './DownloadQuestParticipantsButton';
+import DownloadQuestParticipantsButton from "./DownloadQuestParticipantsButton";
 import DownloadBoostWinnersButton from "./DownloadBoostWinnersButton";
-
 
 type QuestDetailsProps = {
   quest: QuestDocument;
@@ -59,7 +58,6 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
   const { showNotification } = useNotification();
   const questId = quest?.id?.toString();
 
-  
   // this fetches all tasks of this quest from db
   useEffect(() => {
     if (!questId) return;
@@ -241,13 +239,13 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
             <p>Go To Quest</p>
           </Button>
         </div>
-        {isEdit && quest.boosts?.length > 0 && (
-           quest.boosts.map((boost) => (
-           <div className="w-fit" key={boost.id}>
-            <DownloadBoostWinnersButton boostId={boost.id.toString()} />
+        {isEdit &&
+          quest.boosts?.length > 0 &&
+          quest.boosts.map((boost) => (
+            <div className="w-fit" key={boost.id}>
+              <DownloadBoostWinnersButton boostId={boost.id.toString()} />
             </div>
-            ))
-        )}
+          ))}
         {isEdit && (
           <>
             <div className="w-fit">
