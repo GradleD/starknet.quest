@@ -378,12 +378,11 @@ export default function Page() {
             api_url: step.data.api_url,
             cta: step.data.api_cta,
             href: step.data.api_href,
-            regex: step.data.api_regex
+            regex: step.data.api_regex,
           });
         } catch (error) {
           console.error("Error while creating balance task:", error);
         }
-
       } else if (step.type === "Contract") {
         try {
           await AdminService.createContract({
@@ -495,7 +494,7 @@ export default function Page() {
         <AdminQuestDetails
           quest={finalQuestData}
           // eslint-disable-next-line @typescript-eslint/no-empty-function
-          setShowDomainPopup={() => { }}
+          setShowDomainPopup={() => {}}
           hasRootDomain={false}
           rewardButtonTitle={finalQuestData.disabled ? "Enable" : "Disable"}
           onRewardButtonClick={async () => {
