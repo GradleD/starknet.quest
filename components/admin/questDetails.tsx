@@ -58,7 +58,6 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
   const [customError, setCustomError] = useState<string>("");
   const { showNotification } = useNotification();
   const questId = quest?.id?.toString();
-  const boostId = quest?.boosts[0].boostId.toString();
 
   
   // this fetches all tasks of this quest from db
@@ -243,9 +242,11 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
           </Button>
         </div>
         {isEdit && quest.boosts?.length > 0 && (
-          <div className="w-fit">
-            <DownloadBoostWinnersButton boostId={boostId} />
-          </div>
+           quest.boosts.map((boost) => (
+           <div className="w-fit" key={boost.id}>
+            <DownloadBoostWinnersButton boostId={boost.id.toString()} />
+            </div>
+            ))
         )}
         {isEdit && (
           <>
