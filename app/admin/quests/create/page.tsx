@@ -248,7 +248,7 @@ export default function Page() {
   }, [questInput, boostInput, nfturi]);
   
   const handleCreateTask = useCallback(async () => {
-    // Prevenir múltiples guardados
+
     if (isSaving.current) return;
     
     try {
