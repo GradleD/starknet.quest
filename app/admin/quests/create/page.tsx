@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from "react";
 import styles from "@styles/admin.module.css";
 import { useRouter } from "next/navigation";
 import { AdminService } from "@services/authService";
@@ -246,20 +252,14 @@ export default function Page() {
     await setButtonLoading(false);
     handlePagination("Next");
   }, [questInput, boostInput, nfturi]);
-  
-  const handleCreateTask = useCallback(async () => {
 
+  const handleCreateTask = useCallback(async () => {
     if (isSaving.current) return;
-    
     try {
       isSaving.current = true;
       setButtonLoading(true);
-      
-      const unsavedSteps = steps.filter(step => !step.data.id);
-      console.log("Steps to save:", unsavedSteps);
-      
+      const unsavedSteps = steps.filter((step) => !step.data.id);
       let failedQuestions = [];
-      
       for (const step of unsavedSteps) {
         if (step.type === "Quiz") {
           if (
@@ -309,7 +309,10 @@ export default function Page() {
             step.data.twfw_desc?.length === 0 ||
             step.data.twfw_username?.length === 0
           ) {
-            showNotification("Please fill all fields for Twitter Follow", "info");
+            showNotification(
+              "Please fill all fields for Twitter Follow",
+              "info"
+            );
             continue;
           }
           const response = await AdminService.createTwitterFw({
@@ -325,7 +328,10 @@ export default function Page() {
             step.data.twrw_desc?.length === 0 ||
             step.data.twrw_post_link?.length === 0
           ) {
-            showNotification("Please fill all fields for Twitter Retweet", "info");
+            showNotification(
+              "Please fill all fields for Twitter Retweet",
+              "info"
+            );
             continue;
           }
           const response = await AdminService.createTwitterRw({
@@ -403,7 +409,7 @@ export default function Page() {
               api_url: step.data.api_url,
               cta: step.data.api_cta,
               href: step.data.api_href,
-              regex: step.data.api_regex
+              regex: step.data.api_regex,
             });
             if (response) step.data.id = response.id;
           } catch (error) {
@@ -429,19 +435,20 @@ export default function Page() {
             if (response) step.data.id = response.id;
           } catch (error) {
             console.error("Error while creating contract task:", error);
-            showNotification(`Error adding ${step.type} task: ${error}`, "error");
+            showNotification(
+              `Error adding ${step.type} task: ${error}`,
+              "error"
+            );
           }
         }
       }
-
       setSteps([...steps]);
       setCurrentPage((prev) => prev + 1);
-      
     } finally {
       isSaving.current = false;
       setButtonLoading(false);
     }
-}, [steps, questId]);
+  }, [steps, questId]);
 
   const handleRemoveStep = useCallback(
     (index: number) => {
@@ -534,7 +541,7 @@ export default function Page() {
         <AdminQuestDetails
           quest={finalQuestData}
           // eslint-disable-next-line @typescript-eslint/no-empty-function
-          setShowDomainPopup={() => { }}
+          setShowDomainPopup={() => {}}
           hasRootDomain={false}
           rewardButtonTitle={finalQuestData.disabled ? "Enable" : "Disable"}
           onRewardButtonClick={async () => {
