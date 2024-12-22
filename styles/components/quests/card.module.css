@@ -13,7 +13,7 @@
 
 .card:hover {
   transform: translateY(-4px);
-  background-color: var(--hover-background-color, #4a4c53);
+  background-color: var(--hover-background-color);
   box-shadow: 0px 4px 12px rgba(255, 255, 255, 0.1);
 }
 
@@ -48,9 +48,8 @@
 
 .card[aria-disabled="true"] {
   cursor: not-allowed;
- 
 }
-.card[aria-disabled="true"]:hover{
+.card[aria-disabled="true"]:hover {
   border: 1px solid transparent;
 }
 
