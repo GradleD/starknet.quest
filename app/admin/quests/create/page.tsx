@@ -248,7 +248,7 @@ export default function Page() {
   }, [questInput, boostInput, nfturi]);
   
   const handleCreateTask = useCallback(async () => {
-   
+    // Prevenir múltiples guardados
     if (isSaving.current) return;
     
     try {
@@ -257,6 +257,8 @@ export default function Page() {
       
       const unsavedSteps = steps.filter(step => !step.data.id);
       console.log("Steps to save:", unsavedSteps);
+      
+      let failedQuestions = [];
       
       for (const step of unsavedSteps) {
         if (step.type === "Quiz") {
@@ -290,7 +292,14 @@ export default function Page() {
                 });
               } catch (error) {
                 console.error("Error executing promise:", error);
+                failedQuestions.push(question.question);
               }
+            }
+            if (failedQuestions.length > 0) {
+              showNotification(
+                `Failed to create ${failedQuestions.length} questions. Please review and try again.`,
+                "warning"
+              );
             }
             step.data.id = response.id;
           }
@@ -432,7 +441,7 @@ export default function Page() {
       isSaving.current = false;
       setButtonLoading(false);
     }
-  }, [steps, questId]);
+}, [steps, questId]);
 
   const handleRemoveStep = useCallback(
     (index: number) => {
