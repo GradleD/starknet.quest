@@ -18,12 +18,13 @@ import Timer from "@components/quests/timer";
 import NftImage from "@components/quests/nftImage";
 import Task from "@components/quests/task";
 import Reward from "@components/quests/reward";
-import DownloadQuestUsersButton from "@components/quests/downloadQuestUsersButton"
+import DownloadQuestUsersButton from "@components/quests/downloadQuestUsersButton";
 import { AdminService } from "@services/authService";
 import { useNotification } from "@context/NotificationProvider";
 import Button from "@components/UI/button";
 import { useRouter } from "next/navigation";
-import DownloadQuestParticipantsButton from './DownloadQuestParticipantsButton';
+import DownloadQuestParticipantsButton from "./DownloadQuestParticipantsButton";
+import DownloadBoostWinnersButton from "./DownloadBoostWinnersButton";
 
 type QuestDetailsProps = {
   quest: QuestDocument;
@@ -238,6 +239,13 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
             <p>Go To Quest</p>
           </Button>
         </div>
+        {isEdit &&
+          quest.boosts?.length > 0 &&
+          quest.boosts.map((boost) => (
+            <div className="w-fit" key={boost.id}>
+              <DownloadBoostWinnersButton boostId={boost.id.toString()} />
+            </div>
+          ))}
         {isEdit && (
           <>
             <div className="w-fit">

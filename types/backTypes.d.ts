@@ -23,6 +23,7 @@ type QuestDocument = {
   expired: boolean;
   visible: boolean;
   banner?: Banner;
+  boosts: Boost[];
 };
 
 type Banner = {
