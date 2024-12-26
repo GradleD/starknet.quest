@@ -139,8 +139,10 @@ export const getConnectors = () => {
 
     new InjectedConnector({ options: { id: "keplr", name: "Keplr" } }),
 
-    getBraavosMobile(),
-  ];
+    typeof window === undefined || window.innerWidth < 768
+      ? getBraavosMobile()
+      : [],
+  ].flat();
 
   return connectors;
 };
