@@ -1,10 +1,11 @@
 import { constants } from "starknet";
 import { InjectedConnector } from "starknetkit/injected";
 import { WebWalletConnector } from "starknetkit/webwallet";
-import { Connector, StarknetWindowObject } from "starknetkit";
+import { Connector } from "starknetkit";
 import { ArgentMobileConnector } from "starknetkit/argentMobile";
 import { getCurrentNetwork } from "./network";
 import { getBrowser } from "./browserService";
+import { braavosMobileIcon, getBraavosMobile } from "./braavosMobile";
 
 export type WalletStore = "chrome" | "firefox" | "edge" | "safari";
 type WalletDownload = Partial<Record<WalletStore, string>>;
@@ -89,6 +90,18 @@ export const wallets: Wallet[] = [
     },
     website: "https://www.keplr.app/",
   },
+  {
+    id: "braavosMobile",
+    name: "Braavos Mobile",
+    icon: braavosMobileIcon,
+    downloads: {
+      chrome: `https://link.braavos.app/dapp/${window.location.host}`,
+      firefox: `https://link.braavos.app/dapp/${window.location.host}`,
+      edge: `https://link.braavos.app/dapp/${window.location.host}`,
+      safari: `https://link.braavos.app/dapp/${window.location.host}`,
+    },
+    website: `https://link.braavos.app/dapp/${window.location.host}`,
+  },
 ];
 
 // Check if the Bitget wallet is available on the window object
@@ -109,7 +122,6 @@ export const getConnectors = () => {
       },
     }),
     new InjectedConnector({ options: { id: "okxwallet", name: "Okx Wallet" } }),
-
     new WebWalletConnector({
       url:
         getCurrentNetwork() === "TESTNET"
@@ -126,6 +138,8 @@ export const getConnectors = () => {
     }),
 
     new InjectedConnector({ options: { id: "keplr", name: "Keplr" } }),
+
+    getBraavosMobile(),
   ];
 
   return connectors;
@@ -140,6 +154,7 @@ export const sortConnectors = (connectors: Connector[]): Connector[] => {
   const notAvailable: Connector[] = [];
 
   connectors.forEach((connector) => {
+    console.log(connector);
     connector.available()
       ? available.push(connector)
       : notAvailable.push(connector);
