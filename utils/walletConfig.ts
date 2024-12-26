@@ -95,12 +95,12 @@ export const wallets: Wallet[] = [
     name: "Braavos Mobile",
     icon: braavosMobileIcon,
     downloads: {
-      chrome: `https://link.braavos.app/dapp/${window.location.host}`,
-      firefox: `https://link.braavos.app/dapp/${window.location.host}`,
-      edge: `https://link.braavos.app/dapp/${window.location.host}`,
-      safari: `https://link.braavos.app/dapp/${window.location.host}`,
+      chrome: `https://link.braavos.app/dapp/starknet.quest`,
+      firefox: `https://link.braavos.app/dapp/starknet.quest`,
+      edge: `https://link.braavos.app/dapp/starknet.quest`,
+      safari: `https://link.braavos.app/dapp/starknet.quest`,
     },
-    website: `https://link.braavos.app/dapp/${window.location.host}`,
+    website: `https://link.braavos.app/dapp/starknet.quest`,
   },
 ];
 
