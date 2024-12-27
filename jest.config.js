@@ -2,7 +2,7 @@
 module.exports = {
   testEnvironment: "node",
   transform: {
-    "\\.[jt]sx?$": "ts-jest",
+    "^.+\\.(js|jsx|ts|tsx)$": ["babel-jest", { presets: ["next/babel"] }],
   },
   setupFilesAfterEnv: ["./jest.setup.js"],
   moduleNameMapper: {
@@ -21,4 +21,5 @@ module.exports = {
       statements: -10,
     },
   },
+  transformIgnorePatterns: ["node_modules/(?!(@starknet-react|@starknetkit)/)"],
 };
