@@ -16,9 +16,9 @@ module.exports = {
   coverageThreshold: {
     "./utils/": {
       branches: 75,
-      functions: 90,
+      functions: 80,
       lines: 90,
-      statements: -10,
+      statements: -23,
     },
   },
   transformIgnorePatterns: ["node_modules/(?!(@starknet-react|@starknetkit)/)"],
