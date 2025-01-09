@@ -247,11 +247,16 @@ export default function Page() {
     setButtonLoading(true);
     const id = await handleCreateQuest();
     if (!id) return;
+
     await handleCreateBoost(id);
     await handleCreateNftUri(id);
-    await setButtonLoading(false);
-    handlePagination("Next");
-  }, [questInput, boostInput, nfturi]);
+
+    setButtonLoading(false);
+
+    // Redirect to the quest dashboard using the quest ID
+    router.push(`/admin/quests/dashboard/${id}?tab=tasks`);
+}, [questInput, boostInput, nfturi, router]);
+
 
   const handleCreateTask = useCallback(async () => {
     if (isSaving.current) return;
